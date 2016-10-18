@@ -1,6 +1,6 @@
 FROM php:7.0.8-fpm
 
-RUN apt-get update \
+RUN apt-get update --fix-missing \
     && curl -sL https://deb.nodesource.com/setup | bash - \
     && apt-get install -y git libssl-dev zlib1g-dev libicu-dev g++ \
     && pecl install apcu-beta \
