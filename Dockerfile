@@ -5,7 +5,7 @@ RUN apt-get update \
     && apt-get install -y git libssl-dev zlib1g-dev libicu-dev g++ \
     && pecl install apcu-beta \
     && echo extension=apcu.so > /usr/local/etc/php/conf.d/apcu.ini
-RUN docker-php-ext-install zip mbstring intl mysqli pdo_mysql
+RUN docker-php-ext-install zip mbstring intl mysqli pdo_mysql pcntl
 
 RUN curl -sS https://getcomposer.org/installer | php \
     && mv composer.phar /usr/bin/composer
