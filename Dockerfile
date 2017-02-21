@@ -1,4 +1,4 @@
-FROM php:7.0.8-fpm
+FROM php:7.1.2-fpm
 
 RUN apt-get update --fix-missing \
     && curl -sL https://deb.nodesource.com/setup | bash - \
@@ -12,13 +12,13 @@ RUN curl -sS https://getcomposer.org/installer | php \
 
 RUN apt-get install pkg-config libmagickwand-dev wget -y \
     && cd /tmp \
-    && wget https://pecl.php.net/get/imagick-3.4.0.tgz \
-    && tar xvzf imagick-3.4.0.tgz \
-    && cd imagick-3.4.0 \
+    && wget https://pecl.php.net/get/imagick-3.4.3.tgz \
+    && tar xvzf imagick-3.4.3.tgz \
+    && cd imagick-3.4.3 \
     && phpize \
     && ./configure \
     && make install \
-    && rm -rf /tmp/imagick-3.4.0* \
+    && rm -rf /tmp/imagick-3.4.3 \
     && echo extension=imagick.so >> /usr/local/etc/php/conf.d/imagick.ini
 
 
