@@ -1,4 +1,4 @@
-FROM php:7.1.2-fpm
+FROM php:7.1.3-fpm
 
 RUN apt-get update --fix-missing \
     && curl -sL https://deb.nodesource.com/setup | bash - \
