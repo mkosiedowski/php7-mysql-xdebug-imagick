@@ -1,6 +1,6 @@
 FROM php:7.1.4-fpm-alpine
 
-RUN apk update && apk add --no-cache --virtual .build-deps zlib-dev icu-dev icu-libs g++ gcc perl autoconf ca-certificates openssl \
+RUN apk update && apk add --no-cache --virtual .build-deps zlib-dev icu-dev g++ gcc perl autoconf ca-certificates openssl \
  && update-ca-certificates \
  && docker-php-ext-install zip intl mysqli pdo_mysql pcntl bcmath \
  && curl -sS https://getcomposer.org/installer | php \
@@ -16,4 +16,5 @@ RUN apk update && apk add --no-cache --virtual .build-deps zlib-dev icu-dev icu-
     && rm -rf /tmp/imagick-3.4.3 \
     && echo extension=imagick.so >> /usr/local/etc/php/conf.d/imagick.ini \
  && pecl install xdebug \
- && apk del .build-deps g++ gcc autoconf make
+ && apk del .build-deps g++ gcc autoconf make \
+ && apk add icu-libs
