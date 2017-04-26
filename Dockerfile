@@ -16,5 +16,9 @@ RUN apk update && apk add --no-cache --virtual .build-deps zlib-dev icu-dev g++ 
     && rm -rf /tmp/imagick-3.4.3 \
     && echo extension=imagick.so >> /usr/local/etc/php/conf.d/imagick.ini \
  && pecl install xdebug \
+ && pecl install apcu-beta \
+ && pecl install apcu_bc-beta \
+ && echo extension=apcu.so > /usr/local/etc/php/conf.d/apcu.ini \
+ && echo extension=apc.so >> /usr/local/etc/php/conf.d/apcu.ini \
  && apk del .build-deps g++ gcc autoconf make \
  && apk add icu-libs
