@@ -4,7 +4,9 @@ RUN apt-get update --fix-missing \
     && curl -sL https://deb.nodesource.com/setup | bash - \
     && apt-get install -y git libssl-dev zlib1g-dev libicu-dev g++ \
     && pecl install apcu-beta \
-    && echo extension=apcu.so > /usr/local/etc/php/conf.d/apcu.ini
+    && pecl install apcu_bc-beta \
+    && echo extension=apcu.so > /usr/local/etc/php/conf.d/apcu.ini \
+    && echo extension=apc.so >> /usr/local/etc/php/conf.d/apcu.ini
 RUN docker-php-ext-install zip mbstring intl mysqli pdo_mysql pcntl
 
 RUN curl -sS https://getcomposer.org/installer | php \
