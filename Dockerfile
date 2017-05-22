@@ -1,4 +1,4 @@
-FROM php:7.1.4-fpm-alpine
+FROM php:7.1.5-fpm-alpine
 
 RUN apk update && apk add --no-cache --virtual .build-deps zlib-dev icu-dev g++ gcc perl autoconf ca-certificates openssl libjpeg-turbo-dev libpng-dev freetype-dev \
  && update-ca-certificates \
@@ -8,7 +8,7 @@ RUN apk update && apk add --no-cache --virtual .build-deps zlib-dev icu-dev g++ 
  && docker-php-ext-install -j${NPROC} gd \
  && curl -sS https://getcomposer.org/installer | php \
  && mv composer.phar /usr/bin/composer \
- && apk add make \
+ && apk add make pcre-dev \
  && pecl install xdebug \
  && pecl install apcu-beta \
  && pecl install apcu_bc-beta \
