@@ -1,4 +1,4 @@
-FROM php:7.1.5-fpm-alpine
+FROM php:7.1.6-fpm-alpine
 
 RUN apk update && apk add --no-cache --virtual .build-deps zlib-dev icu-dev g++ gcc perl autoconf ca-certificates openssl libjpeg-turbo-dev libpng-dev freetype-dev \
  && update-ca-certificates \
@@ -12,7 +12,18 @@ RUN apk update && apk add --no-cache --virtual .build-deps zlib-dev icu-dev g++ 
  && pecl install xdebug \
  && pecl install apcu-beta \
  && pecl install apcu_bc-beta \
+ && rm /usr/bin/iconv \
+ && curl -SL http://ftp.gnu.org/pub/gnu/libiconv/libiconv-1.14.tar.gz | tar -xz -C . \
+ && cd libiconv-1.14 \
+ && ./configure --prefix=/usr/local \
+ && curl -SL https://raw.githubusercontent.com/mxe/mxe/7e231efd245996b886b501dad780761205ecf376/src/libiconv-1-fixes.patch | patch -p1 -u \
+ && make \
+ && make install \
+ && cd .. \
+ && rm -rf libiconv-1.14 \
  && echo extension=apcu.so > /usr/local/etc/php/conf.d/apcu.ini \
  && echo extension=apc.so >> /usr/local/etc/php/conf.d/apcu.ini \
  && apk del .build-deps g++ gcc autoconf make \
  && apk add icu-libs libjpeg-turbo libpng freetype bash
+
+ENV LD_PRELOAD /usr/local/lib/preloadable_libiconv.so
