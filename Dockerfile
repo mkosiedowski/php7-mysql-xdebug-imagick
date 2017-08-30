@@ -1,4 +1,4 @@
-FROM php:7.1.7-fpm-alpine
+FROM php:7.1.8-fpm-alpine
 
 RUN apk update && apk add --no-cache --virtual .build-deps zlib-dev icu-dev g++ gcc perl autoconf ca-certificates openssl libjpeg-turbo-dev libpng-dev freetype-dev \
  && update-ca-certificates \
