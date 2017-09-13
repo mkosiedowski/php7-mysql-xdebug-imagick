@@ -1,8 +1,8 @@
-FROM php:7.1.8-fpm-alpine
+FROM php:7.1.9-fpm-alpine
 
 RUN apk update && apk add --no-cache --virtual .build-deps zlib-dev icu-dev g++ gcc perl autoconf ca-certificates openssl libjpeg-turbo-dev libpng-dev freetype-dev \
  && update-ca-certificates \
- && docker-php-ext-install zip intl mysqli pdo_mysql pcntl bcmath \
+ && docker-php-ext-install zip intl mysqli pdo_mysql pcntl bcmath exif \
  && docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ --with-png-dir=/usr/include/ \
  && NPROC=$(grep -c ^processor /proc/cpuinfo 2>/dev/null || 1)  \
  && docker-php-ext-install -j${NPROC} gd \
