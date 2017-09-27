@@ -1,8 +1,11 @@
 FROM php:7.1.9-fpm-alpine
 
-RUN apk update && apk add --no-cache --virtual .build-deps zlib-dev icu-dev g++ gcc perl autoconf ca-certificates openssl libjpeg-turbo-dev libpng-dev freetype-dev \
+ENV CURL_VERSION 7.55.1
+ENV NGHTTP2_VERSION 1.26.0
+
+RUN apk update && apk add --no-cache --virtual .build-deps zlib-dev icu-dev g++ gcc perl autoconf ca-certificates openssl libjpeg-turbo-dev libpng-dev freetype-dev gmp-dev \
  && update-ca-certificates \
- && docker-php-ext-install zip intl mysqli pdo_mysql pcntl bcmath exif \
+ && docker-php-ext-install zip intl mysqli pdo_mysql pcntl bcmath exif intl gmp \
  && docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ --with-png-dir=/usr/include/ \
  && NPROC=$(grep -c ^processor /proc/cpuinfo 2>/dev/null || 1)  \
  && docker-php-ext-install -j${NPROC} gd \
@@ -21,9 +24,36 @@ RUN apk update && apk add --no-cache --virtual .build-deps zlib-dev icu-dev g++ 
  && make install \
  && cd .. \
  && rm -rf libiconv-1.14 \
+ && wget https://github.com/nghttp2/nghttp2/releases/download/v$NGHTTP2_VERSION/nghttp2-$NGHTTP2_VERSION.tar.bz2 && \
+    tar xf nghttp2-$NGHTTP2_VERSION.tar.bz2 && \
+    rm nghttp2-$NGHTTP2_VERSION.tar.bz2 && \
+    cd nghttp2-$NGHTTP2_VERSION && \
+    ./configure --prefix=/usr && \
+    make && \
+    make install && \
+    cd .. && \
+    rm -r nghttp2-$NGHTTP2_VERSION \
+ && wget https://curl.haxx.se/download/curl-$CURL_VERSION.tar.bz2 && \
+    tar xf curl-$CURL_VERSION.tar.bz2 && \
+    rm curl-$CURL_VERSION.tar.bz2 && \
+    cd curl-$CURL_VERSION && \
+    ./configure \
+        --with-nghttp2=/usr \
+        --prefix=/usr \
+        --with-ssl \
+        --enable-ipv6 \
+        --enable-unix-sockets \
+        --without-libidn \
+        --disable-static \
+        --disable-ldap \
+        --with-pic && \
+    make && \
+    make install && \
+    cd .. && \
+    rm -r curl-$CURL_VERSION \
  && echo extension=apcu.so > /usr/local/etc/php/conf.d/apcu.ini \
  && echo extension=apc.so >> /usr/local/etc/php/conf.d/apcu.ini \
  && apk del .build-deps g++ gcc autoconf make \
- && apk add icu-libs libjpeg-turbo libpng freetype bash
+ && apk add icu-libs libjpeg-turbo libpng freetype bash gmp
 
 ENV LD_PRELOAD /usr/local/lib/preloadable_libiconv.so
