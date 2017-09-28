@@ -3,7 +3,7 @@ FROM php:7.1.9-fpm-alpine
 ENV CURL_VERSION 7.55.1
 ENV NGHTTP2_VERSION 1.26.0
 
-RUN apk update && apk add --no-cache --virtual .build-deps zlib-dev icu-dev g++ gcc perl autoconf ca-certificates openssl libjpeg-turbo-dev libpng-dev freetype-dev gmp-dev \
+RUN apk update && apk add --no-cache --virtual .build-deps zlib-dev icu-dev g++ gcc perl autoconf ca-certificates openssl openssl-dev libjpeg-turbo-dev libpng-dev freetype-dev gmp-dev \
  && update-ca-certificates \
  && docker-php-ext-install zip intl mysqli pdo_mysql pcntl bcmath exif intl gmp \
  && docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ --with-png-dir=/usr/include/ \
