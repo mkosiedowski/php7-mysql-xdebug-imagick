@@ -1,4 +1,4 @@
-FROM php:7.1.11-fpm-alpine
+FROM php:7.2.0-fpm-alpine
 
 ENV CURL_VERSION 7.55.1
 ENV NGHTTP2_VERSION 1.26.0
@@ -12,7 +12,7 @@ RUN apk update && apk add --no-cache --virtual .build-deps zlib-dev icu-dev g++ 
  && curl -sS https://getcomposer.org/installer | php \
  && mv composer.phar /usr/bin/composer \
  && apk add make pcre-dev \
- && pecl install xdebug \
+ && pecl install xdebug-2.6.0alpha1 \
  && pecl install apcu-beta \
  && pecl install apcu_bc-beta \
  && rm /usr/bin/iconv \
@@ -54,6 +54,6 @@ RUN apk update && apk add --no-cache --virtual .build-deps zlib-dev icu-dev g++ 
  && echo extension=apcu.so > /usr/local/etc/php/conf.d/apcu.ini \
  && echo extension=apc.so >> /usr/local/etc/php/conf.d/apcu.ini \
  && apk del .build-deps g++ gcc autoconf make \
- && apk add icu-libs libjpeg-turbo libpng freetype bash gmp
+ && apk add icu-libs libjpeg-turbo libpng freetype bash gmp openssl
 
 ENV LD_PRELOAD /usr/local/lib/preloadable_libiconv.so
