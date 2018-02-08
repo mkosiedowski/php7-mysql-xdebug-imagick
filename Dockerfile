@@ -2,10 +2,12 @@ FROM php:7.2.0-fpm-alpine
 
 ENV CURL_VERSION 7.55.1
 ENV NGHTTP2_VERSION 1.26.0
+ENV JPEGOPTIM_VERSION 1.4.4
+ENV PNGQUANT_VERSION 2.11.7
 
 RUN apk update && apk add --no-cache --virtual .build-deps zlib-dev icu-dev g++ gcc perl autoconf ca-certificates openssl openssl-dev libjpeg-turbo-dev libpng-dev freetype-dev gmp-dev \
  && update-ca-certificates \
- && docker-php-ext-install zip intl mysqli pdo_mysql pcntl bcmath exif intl gmp \
+ && docker-php-ext-install zip intl mysqli pdo_mysql pcntl bcmath exif gmp \
  && docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ --with-png-dir=/usr/include/ \
  && NPROC=$(grep -c ^processor /proc/cpuinfo 2>/dev/null || 1)  \
  && docker-php-ext-install -j${NPROC} gd \
@@ -53,7 +55,17 @@ RUN apk update && apk add --no-cache --virtual .build-deps zlib-dev icu-dev g++ 
     rm -r curl-$CURL_VERSION \
  && echo extension=apcu.so > /usr/local/etc/php/conf.d/apcu.ini \
  && echo extension=apc.so >> /usr/local/etc/php/conf.d/apcu.ini \
- && apk del .build-deps g++ gcc autoconf make \
- && apk add icu-libs libjpeg-turbo libpng freetype bash gmp openssl
+ && apk add icu-libs libjpeg-turbo libpng freetype bash gmp openssl libpng-dev gmp-dev \
+ && wget http://www.kokkonen.net/tjko/src/jpegoptim-$JPEGOPTIM_VERSION.tar.gz \
+ && tar zxf jpegoptim-$JPEGOPTIM_VERSION.tar.gz \
+ && cd jpegoptim-$JPEGOPTIM_VERSION \
+ && ./configure && make && make install \
+ && cd .. && rm jpegoptim-$JPEGOPTIM_VERSION.tar.gz && rm -R jpegoptim-$JPEGOPTIM_VERSION \
+ && wget http://pngquant.org/pngquant-$PNGQUANT_VERSION-src.tar.gz \
+ && tar zxf pngquant-$PNGQUANT_VERSION-src.tar.gz \
+ && cd pngquant-$PNGQUANT_VERSION \
+ && ./configure && make && make install \
+ && cd .. && rm pngquant-$PNGQUANT_VERSION-src.tar.gz && rm -R pngquant-$PNGQUANT_VERSION \
+ && apk del .build-deps g++ gcc autoconf make
 
 ENV LD_PRELOAD /usr/local/lib/preloadable_libiconv.so
