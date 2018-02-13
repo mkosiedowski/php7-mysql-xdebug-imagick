@@ -1,4 +1,4 @@
-FROM php:7.2.0-fpm-alpine
+FROM php:7.1.14-fpm-alpine
 
 ENV CURL_VERSION 7.55.1
 ENV NGHTTP2_VERSION 1.26.0
@@ -7,14 +7,14 @@ ENV PNGQUANT_VERSION 2.11.7
 
 RUN apk update && apk add --no-cache --virtual .build-deps zlib-dev icu-dev g++ gcc perl autoconf ca-certificates openssl openssl-dev libjpeg-turbo-dev libpng-dev freetype-dev gmp-dev \
  && update-ca-certificates \
- && docker-php-ext-install zip intl mysqli pdo_mysql pcntl bcmath exif gmp \
+ && docker-php-ext-install zip intl mysqli pdo_mysql pcntl bcmath exif intl gmp \
  && docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ --with-png-dir=/usr/include/ \
  && NPROC=$(grep -c ^processor /proc/cpuinfo 2>/dev/null || 1)  \
  && docker-php-ext-install -j${NPROC} gd \
  && curl -sS https://getcomposer.org/installer | php \
  && mv composer.phar /usr/bin/composer \
  && apk add make pcre-dev \
- && pecl install xdebug-2.6.0alpha1 \
+ && pecl install xdebug \
  && pecl install apcu-beta \
  && pecl install apcu_bc-beta \
  && rm /usr/bin/iconv \
