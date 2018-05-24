@@ -1,4 +1,4 @@
-FROM php:7.1.17-fpm-alpine
+FROM php:7.2.5-fpm-alpine
 
 ENV CURL_VERSION 7.55.1
 ENV NGHTTP2_VERSION 1.26.0
