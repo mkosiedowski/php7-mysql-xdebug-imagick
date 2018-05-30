@@ -7,7 +7,7 @@ ENV PNGQUANT_VERSION 2.11.7
 
 RUN apk update && apk add --no-cache --virtual .build-deps zlib-dev icu-dev g++ gcc perl autoconf ca-certificates openssl openssl-dev libjpeg-turbo-dev libpng-dev freetype-dev gmp-dev \
  && update-ca-certificates \
- && docker-php-ext-install zip intl mysqli pdo_mysql pcntl bcmath exif intl gmp \
+ && docker-php-ext-install zip intl mysqli pdo_mysql pcntl bcmath exif intl gmp calendar \
  && docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ --with-png-dir=/usr/include/ \
  && NPROC=$(grep -c ^processor /proc/cpuinfo 2>/dev/null || 1)  \
  && docker-php-ext-install -j${NPROC} gd \
